@@ -43,6 +43,8 @@ void setup()   {
 
 
 void loop() {
+  testfillrect(); 
+//  delay(120000);
    testscrolltext("OBSESSION");
 
    display.clearDisplay();
@@ -174,4 +176,3 @@ void testscrolltext(char * string) {
   delay(1000);    
   display.stopscroll();
 }
-

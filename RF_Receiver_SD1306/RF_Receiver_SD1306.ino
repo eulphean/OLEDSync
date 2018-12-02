@@ -1,3 +1,8 @@
+/*
+ * Test program to show the received text on SSD1306 
+ * 0.96" OLED display. 
+ */
+ 
 #include "Bitmaps.h"
 #include <SPI.h>
 #include <nRF24L01.h>
@@ -22,34 +27,23 @@ void setup() {
 
   // by default, we'll generate the high voltage from the 3.3v line internally! (neat!)
   display.begin(SSD1306_SWITCHCAPVCC, 0x3C);  // initialize with the I2C addr 0x3C (for the 128x32)
-
-  display.display(); // show splashscreen
   display.clearDisplay();   // clears the screen and buffer
-
+  display.setCursor(0, 0);
+  display.fillRect(0, 0, display.width(), display.height(), WHITE);
+  display.display(); // show splashscreen
 }
 void loop() {
   if (radio.available()) {
-    char rxIdx; 
-    radio.read(&rxIdx, sizeof(rxIdx));
-    if (rxIdx == '3' || rxIdx == '5') {
-       display.drawBitmap(0, 0, laugh, 128, 64, 1); 
-       display.display(); 
-    }
-
-    if (rxIdx == '0') {
-      display.drawBitmap(0, 0, laugh, 128, 64, 0); 
-      display.display();
-    }
+    char string[32] = ""; 
+    radio.read(&string, sizeof(string));
+    showText(string); 
   }
 }
 
 void showText(char* string) {
-  display.clearDisplay();
-  
-  display.setTextSize(2);
-  display.setTextColor(WHITE);
-  display.setCursor(10, 10);
-  display.println(string);
+  display.setTextSize(1);
+  display.setTextColor(BLACK, WHITE);
+  display.print(string);
   display.display();
 }
 

@@ -38,49 +38,51 @@ void setup(){
 
 
 void loop() {
+  testfillrect();
+//  delay(120000);
     for (int i = 0; i < 10; i++) {
       showObsessionOneByOne();
     }
 
     // Clear buffer and the screen. 
     display.clearDisplay();
-
-    showObsessionCenter();
-
-    // Wait
-    // delay(2000);
-    Narcoleptic.delay(2000);
-
-//    int j = 0;
-//    for (int i = 0; i < 99; i++) {
-//      display.invertDisplay(true);
-//      Narcoleptic.delay(200);
-//      display.invertDisplay(false);
-//      Narcoleptic.delay(200);
-//      if (i % 10 == 0) {
-//        char * string = myStrings[j]; 
-//        display.setTextSize(random(2, 3)); 
-//        display.setTextColor(BLACK, WHITE);
-//        display.setCursor(random(0, display.width()), random(0, display.height() - 20));
-//        display.print(string);
-//        display.display();
-//        j++;
-//      }
-//    }
-
-    display.clearDisplay();
-
-    testfilltriangle();
-
-    Narcoleptic.delay(3000);
-
-    display.clearDisplay();
-
-    iammyownproperty();
-
-    Narcoleptic.delay(3000);
-
-    display.clearDisplay();
+//
+//    showObsessionCenter();
+//
+//    // Wait
+//    // delay(2000);
+//    Narcoleptic.delay(2000);
+//
+////    int j = 0;
+////    for (int i = 0; i < 99; i++) {
+////      display.invertDisplay(true);
+////      Narcoleptic.delay(200);
+////      display.invertDisplay(false);
+////      Narcoleptic.delay(200);
+////      if (i % 10 == 0) {
+////        char * string = myStrings[j]; 
+////        display.setTextSize(random(2, 3)); 
+////        display.setTextColor(BLACK, WHITE);
+////        display.setCursor(random(0, display.width()), random(0, display.height() - 20));
+////        display.print(string);
+////        display.display();
+////        j++;
+////      }
+////    }
+//
+//    display.clearDisplay();
+//
+//    testfilltriangle();
+//
+//    Narcoleptic.delay(3000);
+//
+//    display.clearDisplay();
+//
+//    iammyownproperty();
+//
+//    Narcoleptic.delay(3000);
+//
+//    display.clearDisplay();
 }
 
 void showObsessionOneByOne() {
