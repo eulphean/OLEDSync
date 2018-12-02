@@ -14,18 +14,18 @@
 class Morse
 {
   public:
-    // Initialize with a handle to the radio object to transmit signals for dits/dahs
+    // Initialize with a radio object to transmit signals for dits/dahs
     Morse(RF24 * radio);
 
     // Send an input string to convert into Morse code and transmit. 
-    void emit(char * string); 
+    void process(String text, int stringLength); 
 
   private:
+    void newMessage();
     void dot(); 
     void dash();
-
-    // Handle to the radio object
-    RF24 * _radio;  
+    void transmitCode(char ch);
+    RF24 * _radio; 
 };
 
 #endif
