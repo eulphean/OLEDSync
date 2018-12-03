@@ -55,7 +55,7 @@ void Morse::charBreak() {
   delay(CHAR_BREAK);
 
   // Char break off.
-  sig = 'x'; 
+  sig = 'x='; 
   _radio->write(&sig, sizeof(sig));
   delay(INNER_PAUSE);
 }
@@ -66,6 +66,28 @@ void Morse::wordBreak() {
   sig = '/';
   _radio->write(&sig, sizeof(sig)); 
   delay(WORD_BREAK); 
+}
+
+void Morse::sendMessage(String text, int stringLength) {
+  char buf[stringLength+1];  
+  text.toCharArray(buf, stringLength+1);
+
+  // Number of transmisssions (32 bytes/packet)
+  float numTrans = (stringLength+1)/32.0; 
+  numTrans = ceil(numTrans); // We need the max number for this division.  
+
+  if (numTrans == 1) {
+     _radio->write(&buf, sizeof(buf));
+  } else {
+     int totalBytes = stringLength+1; 
+     for (int i = 0; i < numTrans; i++) {
+        int numBytes = (i==0) ? 32 : totalBytes - i*32;  
+        int startIdx = i*32; int endIdx = startIdx + numBytes;
+        text.substring(startIdx, endIdx).toCharArray(buf, numBytes); 
+        _radio->setPayloadSize(numBytes);
+        _radio->write(&buf, totalBytes); 
+     }
+  }
 }
 
 void Morse::process(String text, int stringLength) {
@@ -79,6 +101,9 @@ void Morse::process(String text, int stringLength) {
      char curChar = text[i];
      transmitCode(curChar);
   }
+
+  // Transmit string.
+  sendMessage(text, stringLength);
 }
 
 void Morse::transmitCode(char ch) {

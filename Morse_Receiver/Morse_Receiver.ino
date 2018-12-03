@@ -20,8 +20,9 @@ Adafruit_SH1106 display(OLED_RESET);
 void setup() {
   Serial.begin(9600);
   radio.begin();
+  radio.enableDynamicPayloads();
   radio.openReadingPipe(0, address);
-  radio.setPALevel(RF24_PA_MIN);
+  radio.setPALevel(RF24_PA_MAX);
   radio.startListening();
 
   // by default, we'll generate the high voltage from the 3.3v line internally! (neat!)
@@ -31,52 +32,51 @@ void setup() {
 }
 void loop() {
   if (radio.available()) {
-    char morse = ""; // . x -
-    radio.read(&morse, sizeof(morse));
-    switch (morse) {
-      case '.': {
-        dot(); 
-        break; 
-      }
+    int payloadSize = radio.getDynamicPayloadSize(); 
+    char payload[payloadSize] = ""; 
+    radio.read(payload, sizeof(payload));
 
-      case 'x': {
-        clearScreen(); 
-        break;
-      }
-
-      case '-': {
-        dash();
-        break;         
-      }
-
-      case 'n': {
-        newMessage(); 
-        break;
-      }
-
-      case '|': {
-        charBreak();
-        break;
-      }
-
-      case '/': {
-        wordBreak();
-        break;
-      }
-
-      default: {
-        break;
-      }
-    }
-  }
-}
-
-void showText(char* string) {
-  display.setTextSize(2);
-  display.setTextColor(BLACK, WHITE);
-  display.print(string);
-  display.display();
-}
+    if (payloadSize > 1) {
+      showStringOneByOne(payload, payloadSize); 
+    } else {
+      switch (payload[0]) {
+        case '.': {
+          dot(); 
+          break; 
+        }
+  
+        case 'x': {
+          clearScreen(); 
+          break;
+        }
+  
+        case '-': {
+          dash();
+          break;         
+        }
+  
+        case 'n': {
+          newMessage(); 
+          break;
+        }
+  
+        case '|': {
+          charBreak();
+          break;
+        }
+  
+        case '/': {
+          wordBreak();
+          break;
+        }
+  
+        default: {
+          break;
+        }
+      }// End switch
+    }// End else
+  }// End Radio
+}// End function
 
 void dot()
 {
@@ -99,17 +99,26 @@ void clearScreen() {
 
 void newMessage() {
   display.clearDisplay(); 
-  display.setCursor(0, 0); 
   display.setTextSize(2);
   display.setTextColor(BLACK, WHITE);
 
   // Text to show. 
-  char text[] = "NEW MESSAGE"; 
-  for (int i = 0; i < 11; i++) {
-    char curChar = text[i]; 
-    display.print(curChar); 
+  char t[3] = "NEW"; 
+  display.setCursor(50, 10); 
+  for (int i = 0; i < 3; i++) {
+    char c = t[i];
+    display.print(c); 
     display.display();
-    delay(100);
+    delay(150);
+  }
+  
+  char n[7] = "MESSAGE";
+  display.setCursor(25, 28); 
+  for (int i = 0; i < 7; i++) {
+    char c = n[i]; 
+    display.print(c); 
+    display.display();
+    delay(150);
   }
 }
 
@@ -125,6 +134,21 @@ void wordBreak() {
                         display.width()/2-30, display.height(),
                          display.width()/2+30, display.height(), WHITE);
   display.display();
+}
+
+void showStringOneByOne(char payload [], int payloadSize) {
+  display.clearDisplay(); 
+  display.setCursor(0, 0); 
+  display.setTextSize(2);
+  display.setTextColor(BLACK, WHITE); 
+
+  // We don't want to print the endline character. 
+  for (int i = 0; i < payloadSize-1; i++) {
+    char curChar = payload[i]; 
+    display.print(curChar);
+    display.display(); 
+    delay(200);
+  }
 }
 
 

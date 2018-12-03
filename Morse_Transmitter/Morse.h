@@ -35,6 +35,7 @@ class Morse
     void charBreak();
     void wordBreak();
     void transmitCode(char ch);
+    void sendMessage(String text, int stringLength);
     RF24 * _radio; 
 };
 
