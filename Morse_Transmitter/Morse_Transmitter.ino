@@ -30,7 +30,7 @@ void setup()
   radio.openWritingPipe(address);
   radio.setPALevel(RF24_PA_MIN);
   radio.stopListening();
-  
+
   Serial.println("Begin");
 }
 

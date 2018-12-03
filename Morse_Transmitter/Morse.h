@@ -11,6 +11,14 @@
 #include <RF24.h>
 #include <Wire.h>
 
+// DELAYS
+#define DOT 300           // Duration of a dot
+#define DASH 1500         // Duration of a dash
+#define INNER_PAUSE 150  // Duration of pause between dot and dash in a character 
+#define CHAR_BREAK 500   // Duration of pause between characters
+#define WORD_BREAK 500   // Duration of pause between words (spaces, punctuation, etc)
+#define NEW_MESSAGE 4000 // Duration of pause after New Message flashes. 
+
 class Morse
 {
   public:
@@ -24,6 +32,8 @@ class Morse
     void newMessage();
     void dot(); 
     void dash();
+    void charBreak();
+    void wordBreak();
     void transmitCode(char ch);
     RF24 * _radio; 
 };

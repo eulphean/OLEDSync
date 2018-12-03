@@ -15,12 +15,12 @@ void Morse::dot() {
   // Dot
   sig = '.'; 
   _radio->write(&sig, sizeof(sig));
-  delay(300);
+  delay(DOT);
 
   // Dot off
   sig = 'x'; 
   _radio->write(&sig, sizeof(sig));
-  delay(300);
+  delay(INNER_PAUSE);
 }
 
 // Transmit dash
@@ -30,12 +30,12 @@ void Morse::dash() {
   // Dash. 
   sig = '-'; 
   _radio->write(&sig, sizeof(sig));
-  delay(1200);
+  delay(DASH);
 
   // Dash off.
   sig = 'x'; 
   _radio->write(&sig, sizeof(sig));
-  delay(300);
+  delay(INNER_PAUSE);
 }
  
 void Morse::newMessage() {
@@ -44,8 +44,30 @@ void Morse::newMessage() {
   // New message
   sig = 'n'; 
   _radio->write(&sig, sizeof(sig)); 
-  delay(4000); 
+  delay(NEW_MESSAGE); 
 }
+
+void Morse::charBreak() {
+  char sig; 
+
+  sig = '|';
+  _radio->write(&sig, sizeof(sig));  
+  delay(CHAR_BREAK);
+
+  // Char break off.
+  sig = 'x'; 
+  _radio->write(&sig, sizeof(sig));
+  delay(INNER_PAUSE);
+}
+
+void Morse::wordBreak() {
+  char sig; 
+
+  sig = '/';
+  _radio->write(&sig, sizeof(sig)); 
+  delay(WORD_BREAK); 
+}
+
 void Morse::process(String text, int stringLength) {
   // New message notification. 
   newMessage();
@@ -57,169 +79,174 @@ void Morse::process(String text, int stringLength) {
      char curChar = text[i];
      transmitCode(curChar);
   }
-
-  // Actual message to the receiver.  
-  
 }
 
 void Morse::transmitCode(char ch) {
+  Serial.println(ch);
+  
   switch (ch) {
+    case ' ': {
+      // Word gap. 
+      wordBreak();
+      break; 
+    }
+    
     case 'a':
     case 'A': {
-      dot(); dash();
+      dot(); dash(); charBreak();
       break; 
     }
 
     case 'b':
     case 'B': {
-      dash(); dot(); dot(); dot();
+      dash(); dot(); dot(); dot(); charBreak();
       break; 
     }
 
     case 'c':
     case 'C': {
-      dot(); dot(); dash(); dot();
+      dot(); dot(); dash(); dot(); charBreak();
       break; 
     }
 
     case 'd':
     case 'D': {
-      dash(); dot(); dot();
+      dash(); dot(); dot(); charBreak();
       break; 
     }
 
     case 'e':
     case 'E': {
-      dot();
+      dot(); charBreak();
       break; 
     }
 
     case 'f':
     case 'F': {
-      dot(); dot(); dash(); dot();
+      dot(); dot(); dash(); dot(); charBreak();
       break; 
     }
 
     case 'g':
     case 'G': {
-      dash(); dash(); dot();
+      dash(); dash(); dot(); charBreak();
       break; 
     }
 
     case 'h':
     case 'H': {
-      dot(); dot(); dot(); dot();
+      dot(); dot(); dot(); dot(); charBreak();
       break; 
     }
 
     case 'i':
     case 'I': {
-      dot(); dot();
+      dot(); dot(); charBreak();
       break; 
     }
 
     case 'j':
     case 'J': {
-      dot(); dash(); dash(); dash();
+      dot(); dash(); dash(); dash(); charBreak();
       break; 
     }
 
     case 'k':
     case 'K': {
-      dash(); dot(); dash();
+      dash(); dot(); dash(); charBreak();
       break; 
     }
 
     case 'l':
     case 'L': {
-      dot(); dash(); dot(); dot();
+      dot(); dash(); dot(); dot(); charBreak();
       break; 
     }
 
     case 'm':
     case 'M': {
-      dash(); dash();
+      dash(); dash(); charBreak();
       break; 
     }
 
     case 'n':
     case 'N': {
-      dash(); dot();
+      dash(); dot(); charBreak();
       break; 
     }
 
     case 'o':
     case 'O': {
-      dash(); dash(); dash();
+      dash(); dash(); dash(); charBreak();
       break; 
     }
 
     case 'p':
     case 'P': {
-      dot(); dash(); dash(); dot();
+      dot(); dash(); dash(); dot(); charBreak();
       break; 
     }
 
     case 'q':
     case 'Q': {
-      dash(); dash(); dot(); dash();
+      dash(); dash(); dot(); dash(); charBreak();
       break; 
     }
 
     case 'r':
     case 'R': {
-      dot(); dash(); dot();
+      dot(); dash(); dot(); charBreak();
       break; 
     }
 
     
     case 's':
     case 'S': {
-      dot(); dot(); dot();
+      dot(); dot(); dot(); charBreak();
       break; 
     }
 
     case 't':
     case 'T': {
-      dash();
+      dash(); charBreak();
       break; 
     }
 
     case 'u':
     case 'U': {
-      dot(); dot(); dash();
+      dot(); dot(); dash(); charBreak();
       break; 
     }
 
     
     case 'v':
     case 'V': {
-      dot(); dot(); dot(); dash();
+      dot(); dot(); dot(); dash(); charBreak();
       break; 
     }
 
     case 'w':
     case 'W': {
-      dot(); dash(); dash();
+      dot(); dash(); dash(); charBreak();
       break; 
     }
 
     case 'x':
     case 'X': {
-      dash(); dot(); dot(); dash();
+      dash(); dot(); dot(); dash(); charBreak();
       break; 
     }
 
     
     case 'y':
     case 'Y': {
-      dash(); dot(); dash(); dash();
+      dash(); dot(); dash(); dash(); charBreak();
       break; 
     }
 
     case 'z':
     case 'Z': {
-      dash(); dash(); dot(); dot();
+      dash(); dash(); dot(); dot(); charBreak();
       break; 
     }
 

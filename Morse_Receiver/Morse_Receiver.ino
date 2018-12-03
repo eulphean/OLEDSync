@@ -54,6 +54,16 @@ void loop() {
         break;
       }
 
+      case '|': {
+        charBreak();
+        break;
+      }
+
+      case '/': {
+        wordBreak();
+        break;
+      }
+
       default: {
         break;
       }
@@ -94,7 +104,7 @@ void newMessage() {
   display.setTextColor(BLACK, WHITE);
 
   // Text to show. 
-  char text[] = "New Message"; 
+  char text[] = "NEW MESSAGE"; 
   for (int i = 0; i < 11; i++) {
     char curChar = text[i]; 
     display.print(curChar); 
@@ -102,4 +112,19 @@ void newMessage() {
     delay(100);
   }
 }
+
+void charBreak() {
+  display.clearDisplay(); 
+  display.fillRect(display.width()/2-10, 0, 20, display.height(), WHITE); 
+  display.display();
+}
+
+void wordBreak() {
+  display.clearDisplay();
+  display.fillTriangle(display.width()/2, 0,
+                        display.width()/2-30, display.height(),
+                         display.width()/2+30, display.height(), WHITE);
+  display.display();
+}
+
 
