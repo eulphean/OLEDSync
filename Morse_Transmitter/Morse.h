@@ -36,7 +36,20 @@ class Morse
     void wordBreak();
     void transmitCode(char ch);
     void sendMessage(String text, int stringLength);
+    void sendMultipleAddresses(char * sig, int len);
     RF24 * _radio; 
+    const byte nodeAddresses[10][5] = {
+      {'N','O','D','E','0'},
+      {'N','O','D','E','1'},
+      {'N','O','D','E','2'},
+      {'N','O','D','E','3'},
+      {'N','O','D','E','4'},
+      {'N','O','D','E','5'},
+      {'N','O','D','E','6'},
+      {'N','O','D','E','7'},
+      {'N','O','D','E','8'},
+      {'N','O','D','E','9'},
+    };
 };
 
 #endif

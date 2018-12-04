@@ -14,12 +14,12 @@ void Morse::dot() {
   
   // Dot
   sig = '.'; 
-  _radio->write(&sig, sizeof(sig));
+  sendMultipleAddresses(&sig, sizeof(sig));
   delay(DOT);
 
   // Dot off
   sig = 'x'; 
-  _radio->write(&sig, sizeof(sig));
+  sendMultipleAddresses(&sig, sizeof(sig));
   delay(INNER_PAUSE);
 }
 
@@ -29,12 +29,12 @@ void Morse::dash() {
 
   // Dash. 
   sig = '-'; 
-  _radio->write(&sig, sizeof(sig));
+  sendMultipleAddresses(&sig, sizeof(sig));
   delay(DASH);
 
   // Dash off.
   sig = 'x'; 
-  _radio->write(&sig, sizeof(sig));
+  sendMultipleAddresses(&sig, sizeof(sig));
   delay(INNER_PAUSE);
 }
  
@@ -43,7 +43,8 @@ void Morse::newMessage() {
 
   // New message
   sig = 'n'; 
-  _radio->write(&sig, sizeof(sig)); 
+  sendMultipleAddresses(&sig, sizeof(sig));
+  
   delay(NEW_MESSAGE); 
 }
 
@@ -51,12 +52,12 @@ void Morse::charBreak() {
   char sig; 
 
   sig = '|';
-  _radio->write(&sig, sizeof(sig));  
+  sendMultipleAddresses(&sig, sizeof(sig)); 
   delay(CHAR_BREAK);
 
   // Char break off.
   sig = 'x='; 
-  _radio->write(&sig, sizeof(sig));
+  sendMultipleAddresses(&sig, sizeof(sig));
   delay(INNER_PAUSE);
 }
 
@@ -64,7 +65,7 @@ void Morse::wordBreak() {
   char sig; 
 
   sig = '/';
-  _radio->write(&sig, sizeof(sig)); 
+  sendMultipleAddresses(&sig, sizeof(sig));
   delay(WORD_BREAK); 
 }
 
@@ -77,7 +78,7 @@ void Morse::sendMessage(String text, int stringLength) {
   numTrans = ceil(numTrans); // We need the max number for this division.  
 
   if (numTrans == 1) {
-     _radio->write(&buf, sizeof(buf));
+     sendMultipleAddresses(buf, sizeof(buf));
   } else {
      int totalBytes = stringLength+1; 
      for (int i = 0; i < numTrans; i++) {
@@ -85,7 +86,7 @@ void Morse::sendMessage(String text, int stringLength) {
         int startIdx = i*32; int endIdx = startIdx + numBytes;
         text.substring(startIdx, endIdx).toCharArray(buf, numBytes); 
         _radio->setPayloadSize(numBytes);
-        _radio->write(&buf, totalBytes); 
+        sendMultipleAddresses(buf, numBytes);
      }
   }
 }
@@ -278,6 +279,13 @@ void Morse::transmitCode(char ch) {
     default: 
       break;
     
+  }
+}
+
+void Morse::sendMultipleAddresses(char * buf, int len) {
+  for (byte node=0; node < 10; node++) {
+    _radio->openWritingPipe(nodeAddresses[node]); 
+    _radio->write(buf, len);
   }
 }
 

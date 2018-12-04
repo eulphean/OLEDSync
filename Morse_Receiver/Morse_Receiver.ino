@@ -7,7 +7,7 @@
 #include <Adafruit_SH1106.h>
 
 RF24 radio(7, 8); // CE, CSN
-const byte address[6] = "00001";
+const byte nodeAddress[5] = {'N','O','D','E','3'};
 
 // OLED setup.
 #define OLED_RESET 4
@@ -16,9 +16,8 @@ Adafruit_SH1106 display(OLED_RESET);
 void setup() {
   Serial.begin(9600);
   radio.begin();
-  radio.setAutoAck(false);
   radio.enableDynamicPayloads();
-  radio.openReadingPipe(0, address);
+  radio.openReadingPipe(0, nodeAddress);
   radio.setPALevel(RF24_PA_MAX);
   radio.startListening();
 

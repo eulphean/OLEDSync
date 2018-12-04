@@ -9,9 +9,7 @@
 #include "Morse.h"
 
 // Radio
-RF24 radio(7, 8); // CE, CSN
-const byte address[6] = "00001";
-
+RF24 radio(7, 8); // CE, CS
 
 // Morse Initialize
 Morse morseEncoder(&radio);
@@ -27,9 +25,7 @@ void setup()
 
   // Initialize the transmitting radio.
   radio.begin();
-  radio.setAutoAck(false);
   radio.enableDynamicPayloads();
-  radio.openWritingPipe(address);
   radio.setPALevel(RF24_PA_MIN);
   radio.stopListening();
 
