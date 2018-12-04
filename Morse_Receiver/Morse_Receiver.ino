@@ -2,11 +2,7 @@
  * Morse Receiver code. This will be the receiving Arduinos connected
  * to OLEDs that will receive the radio signals. 
  */
- 
-#include <SPI.h>
-#include <nRF24L01.h>
 #include <RF24.h>
-#include <Wire.h>
 #include <Adafruit_GFX.h>
 #include <Adafruit_SH1106.h>
 
@@ -20,6 +16,7 @@ Adafruit_SH1106 display(OLED_RESET);
 void setup() {
   Serial.begin(9600);
   radio.begin();
+  radio.setAutoAck(false);
   radio.enableDynamicPayloads();
   radio.openReadingPipe(0, address);
   radio.setPALevel(RF24_PA_MAX);

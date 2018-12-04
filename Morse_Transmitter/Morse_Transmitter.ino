@@ -27,9 +27,10 @@ void setup()
 
   // Initialize the transmitting radio.
   radio.begin();
+  radio.setAutoAck(false);
   radio.enableDynamicPayloads();
   radio.openWritingPipe(address);
-  radio.setPALevel(RF24_PA_MAX);
+  radio.setPALevel(RF24_PA_MIN);
   radio.stopListening();
 
   Serial.println("Begin");
