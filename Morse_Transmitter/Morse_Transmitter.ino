@@ -42,6 +42,9 @@ void loop()
     if (inChar == '\n') {
       Serial.print(inputText); Serial.print(", "); Serial.println(inputTextLength);
       morseEncoder.process(inputText, inputTextLength);
+      inputText = "";
+      inputTextLength = 0; 
+      delay(5000);
     } else {
       inputText += inChar; 
       inputTextLength++;
@@ -49,8 +52,4 @@ void loop()
   }
 
   delay(1000);
-  
-  // Reset input text and length. 
-  inputText = "";
-  inputTextLength = 0;
 }
