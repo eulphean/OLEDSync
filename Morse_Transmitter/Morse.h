@@ -27,6 +27,7 @@ class Morse
 
     // Send an input string to convert into Morse code and transmit. 
     void process(String text, int stringLength); 
+    void loiter();
 
   private:
     void newMessage();

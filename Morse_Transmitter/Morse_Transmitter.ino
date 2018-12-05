@@ -52,4 +52,7 @@ void loop()
   }
 
   delay(1000);
+
+  // Loiter for a bit. 
+  morseEncoder.loiter();
 }

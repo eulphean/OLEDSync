@@ -8,6 +8,31 @@ Morse::Morse(RF24 * radio)
     _radio = radio;
 }
 
+void Morse::loiter() {
+  char sig = '+';
+
+  // Light up left to right
+  for (int node=0; node < 10; node++) {
+    _radio->openWritingPipe(nodeAddresses[node]); 
+    _radio->write(&sig, sizeof(sig));
+
+    delay(200);
+  }
+
+  delay(1000);
+
+  sig = 'x';
+  // Light down right to left
+   for (int node=9; node >= 0; node--) {
+    _radio->openWritingPipe(nodeAddresses[node]); 
+    _radio->write(&sig, sizeof(sig));
+
+    delay(200);
+  }
+  
+  delay(500);
+}
+
 // Transmit dot
 void Morse::dot() {
   char sig; 

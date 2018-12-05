@@ -7,7 +7,7 @@
 #include <Adafruit_SH1106.h>
 
 RF24 radio(7, 8); // CE, CSN
-const byte nodeAddress[5] = {'N','O','D','E','3'};
+const byte nodeAddress[5] = {'N','O','D','E','0'};
 
 // OLED setup.
 #define OLED_RESET 4
@@ -65,6 +65,11 @@ void loop() {
           wordBreak();
           break;
         }
+
+        case '+': {
+          loiter();
+          break;
+        }
   
         default: {
           break;
@@ -73,6 +78,12 @@ void loop() {
     }// End else
   }// End Radio
 }// End function
+
+void loiter() {
+  display.clearDisplay();
+  display.fillRect(0, 0, display.width(), display.height(), WHITE);
+  display.display();
+}
 
 void dot()
 {
@@ -84,7 +95,10 @@ void dot()
 void dash()
 {
   display.clearDisplay();
-  display.fillRect(0, 0, display.width(), display.height(), WHITE);
+  display.fillRect(0, 0, 20, display.height(), WHITE); 
+  display.fillRect(32, 0, 20, display.height(), WHITE);  
+  display.fillRect(64, 0, 20, display.height(), WHITE);
+  display.fillRect(96, 0, 20, display.height(), WHITE);
   display.display();
 }
 
@@ -120,7 +134,9 @@ void newMessage() {
 
 void charBreak() {
   display.clearDisplay(); 
-  display.fillRect(display.width()/2-10, 0, 20, display.height(), WHITE); 
+  display.drawCircle(display.width()/2, display.height()/2, 5, WHITE);
+  display.drawCircle(display.width()/2, display.height()/2, 10, WHITE);
+  display.drawCircle(display.width()/2, display.height()/2, 15, WHITE);
   display.display();
 }
 
