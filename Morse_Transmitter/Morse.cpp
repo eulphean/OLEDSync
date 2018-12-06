@@ -12,7 +12,7 @@ void Morse::loiter() {
   char sig = '+';
 
   // Light up left to right
-  for (int node=0; node < 10; node++) {
+  for (int node=0; node < 12; node++) {
     _radio->openWritingPipe(nodeAddresses[node]); 
     _radio->write(&sig, sizeof(sig));
 
@@ -23,7 +23,7 @@ void Morse::loiter() {
 
   sig = 'x';
   // Light down right to left
-   for (int node=9; node >= 0; node--) {
+   for (int node=11; node >= 0; node--) {
     _radio->openWritingPipe(nodeAddresses[node]); 
     _radio->write(&sig, sizeof(sig));
 
@@ -133,8 +133,6 @@ void Morse::process(String text, int stringLength) {
 }
 
 void Morse::transmitCode(char ch) {
-  Serial.println(ch);
-  
   switch (ch) {
     case ' ': {
       // Word gap. 
@@ -301,6 +299,56 @@ void Morse::transmitCode(char ch) {
       break; 
     }
 
+    case '0': {
+      dash(); dash(); dash(); dash(); dash(); charBreak();
+      break;
+    }
+
+    case '1': {
+      dot(); dash(); dash(); dash(); dash(); charBreak();
+      break;
+    }
+
+    case '2': {
+      dot(); dot(); dash(); dash(); dash(); charBreak();
+      break;
+    }
+
+    case '3': {
+      dot(); dot(); dot(); dash(); dash(); charBreak();
+      break;
+    }
+
+    case '4': {
+      dot(); dot(); dot(); dot(); dash(); charBreak();
+      break;
+    }
+
+    case '5': {
+      dot(); dot(); dot(); dot(); dot(); charBreak();
+      break;
+    }
+
+    case '6': {
+      dash(); dot(); dot(); dot(); dot(); charBreak();
+      break;
+    }
+
+    case '7': {
+      dash(); dash(); dot(); dot(); dot(); charBreak();
+      break;
+    }
+
+    case '8': {
+      dash(); dash(); dash(); dot(); dot(); charBreak();
+      break;
+    }
+
+    case '9': {
+      dash(); dash(); dash(); dash(); dot(); charBreak();
+      break;
+    }
+
     default: 
       break;
     
@@ -308,7 +356,7 @@ void Morse::transmitCode(char ch) {
 }
 
 void Morse::sendMultipleAddresses(char * buf, int len) {
-  for (byte node=0; node < 10; node++) {
+  for (byte node=0; node < 12; node++) {
     _radio->openWritingPipe(nodeAddresses[node]); 
     _radio->write(buf, len);
   }

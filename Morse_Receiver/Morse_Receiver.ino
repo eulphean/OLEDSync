@@ -7,7 +7,7 @@
 #include <Adafruit_SH1106.h>
 
 RF24 radio(7, 8); // CE, CSN
-const byte nodeAddress[5] = {'N','O','D','E','0'};
+const byte nodeAddress[5] = {'N','O','D','E','6'};
 
 // OLED setup.
 #define OLED_RESET 4

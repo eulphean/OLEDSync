@@ -39,7 +39,7 @@ class Morse
     void sendMessage(String text, int stringLength);
     void sendMultipleAddresses(char * sig, int len);
     RF24 * _radio; 
-    const byte nodeAddresses[10][5] = {
+    const byte nodeAddresses[12][5] = {
       {'N','O','D','E','0'},
       {'N','O','D','E','1'},
       {'N','O','D','E','2'},
@@ -50,6 +50,8 @@ class Morse
       {'N','O','D','E','7'},
       {'N','O','D','E','8'},
       {'N','O','D','E','9'},
+      {'N','O','D','E','!'},
+      {'N','O','D','E','@'},
     };
 };
 
