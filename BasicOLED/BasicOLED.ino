@@ -37,28 +37,19 @@ class Block {
       return edgeY==64;
     }
 
-    uint8_t getX() {
-      return x; 
-    }
+    uint8_t x; uint8_t y; 
 
-    uint8_t getY() {
-      return y;
-    }
-
-  private: 
-    uint8_t x; uint8_t y; uint8_t accel = 1;;
+  private: uint8_t accel = 1;;
     uint8_t width = 7; 
 }; 
 
-// Create a bunch of bricks and drop them from the
-// top. Create the bricks randomly on top.
-
-const uint8_t numRows = 16; 
-const uint8_t numCols = 8;
+const uint8_t numCols = 16; 
+const uint8_t numRows = 8;
 
 uint8_t numBlock = 0;
 Block * blocks[numRows*numCols] = { NULL };
-Block * block; 
+Block * block = NULL;
+uint8_t blocksPerCol[numCols] = { 0 };
 
 void setup(void) {
   Serial.begin(9600);
@@ -73,12 +64,16 @@ void setup(void) {
   createBlock();
 }
 
-void drawFace(uint8_t inc) {
-  // Face
-  u8g.drawCircle(20+inc, 20, 20);
-  u8g.drawCircle(11+inc, 12, 4);
-  u8g.drawCircle(27+inc, 12, 4);
-  u8g.drawBox(12+inc, 25, 15, 5);
+void createBlock() {
+  uint8_t col = random(numCols); 
+  while(blocksPerCol[col] == numRows) {
+    Serial.print("Column full.");
+    col = random(numCols); 
+  }
+  
+  block = new Block(col, 0);
+  blocks[numBlock] = block; 
+  numBlock++;
 }
 
 void draw() { 
@@ -108,7 +103,7 @@ void loop(void) {
 boolean isIntersecting() {
   for (uint8_t j = 0; j < 128; j++) {
     if (blocks[j] != NULL) {
-     if ((block->getY()+7 == blocks[j]->getY()-1) && (block->getX() == blocks[j]->getX())) {
+     if ((block->y+7 == blocks[j]->y - 1) && (block->x == blocks[j]->x)) {
         return true; 
      }
     }
@@ -116,11 +111,3 @@ boolean isIntersecting() {
 
   return false;
 }
-
-void createBlock() {
-  // Create a new block and store it in the array. 
-  block = new Block(random(numRows), 0);
-  blocks[numBlock] = block; 
-  numBlock++;
-}
-
