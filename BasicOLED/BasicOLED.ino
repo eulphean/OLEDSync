@@ -93,6 +93,7 @@ void assignBlock() {
     delay(1000);
     clearOLED(); 
     numBlocks = 0; 
+    blocksPerCol[numCols] = { 0 };
     
     // Assign block
     assignBlock();
