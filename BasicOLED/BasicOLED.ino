@@ -19,7 +19,7 @@ class Block {
     }
     
     void show() {
-      u8g.setHiColor(255);
+      u8g.setHiColor(1);
       u8g.drawBox(x, y, width, width);
       u8g.setHiColor(0);
       u8g.drawFrame(x+1,y+1,width-2, width-2);
