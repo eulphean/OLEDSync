@@ -80,6 +80,9 @@ void assignBlock() {
       col = random(numCols); 
     }
 
+    // Increment blocks per column. 
+    blocksPerCol[col]++;
+
     blocks[numBlocks]->setColsRows(col, 0);
     currentBlock = blocks[numBlocks]; 
 
@@ -87,7 +90,7 @@ void assignBlock() {
     numBlocks++;
     
   } else {
-    delay(2000);
+    delay(1000);
     clearOLED(); 
     numBlocks = 0; 
     
