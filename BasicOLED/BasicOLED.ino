@@ -13,10 +13,9 @@ const byte nodeAddress[5] = {'N','O','D','E','6'};
 class Block {
   public: 
     Block() {}
-    
-    Block(uint8_t numRow, uint8_t numCol) {
-      x = numRow * 8; 
-      y = numCol * 8;; 
+
+    void setColsRows(uint8_t numCols, uint8_t numRows) {
+      x = numCols * 8; y = numRows * 8;
     }
     
     void show() {
@@ -26,29 +25,31 @@ class Block {
       u8g.drawFrame(x+1,y+1,width-2, width-2);
     }
 
-    void update() {
-      if (!hasReached()) {
+    void updateBlock() {
+      if (!hasReachedBottom()) {
         y = y + accel;
       }
     }
 
-    bool hasReached() {
+    bool hasReachedBottom() {
       uint8_t edgeY = y+width;
       return edgeY==64;
     }
 
+    ~Block() {}
+
     uint8_t x; uint8_t y; 
 
-  private: uint8_t accel = 1;;
+  private: uint8_t accel = 1;
     uint8_t width = 7; 
 }; 
 
 const uint8_t numCols = 16; 
 const uint8_t numRows = 8;
 
-uint8_t numBlock = 0;
+uint8_t numBlocks = 0;
 Block * blocks[numRows*numCols] = { NULL };
-Block * block = NULL;
+Block * currentBlock = NULL;
 uint8_t blocksPerCol[numCols] = { 0 };
 
 void setup(void) {
@@ -61,26 +62,43 @@ void setup(void) {
   radio.setPALevel(RF24_PA_MAX);
   radio.startListening();
 
-  createBlock();
+  // Allocate memory for all the blocks.  
+  for (int i = 0; i < 128; i++) {
+    blocks[i] = new Block; 
+  }
+
+  // Assign the first block
+  assignBlock();
 }
 
-void createBlock() {
-  uint8_t col = random(numCols); 
-  while(blocksPerCol[col] == numRows) {
-    Serial.print("Column full.");
-    col = random(numCols); 
+void assignBlock() {
+  // What happens when we have created all the blocks we wanted. 
+  // We want to reset the screen.
+  if (numBlocks < numRows*numCols) {
+    uint8_t col = random(numCols); 
+    while(blocksPerCol[col] == numRows) {
+      col = random(numCols); 
+    }
+
+    blocks[numBlocks]->setColsRows(col, 0);
+    currentBlock = blocks[numBlocks]; 
+
+    // Assign next block. 
+    numBlocks++;
+    
+  } else {
+    delay(2000);
+    clearOLED(); 
+    numBlocks = 0; 
+    
+    // Assign block
+    assignBlock();
   }
-  
-  block = new Block(col, 0);
-  blocks[numBlock] = block; 
-  numBlock++;
 }
 
 void draw() { 
-  for (int i = 0; i < numRows * numCols; i++) {
-    if (blocks[i] != NULL) {
-      blocks[i]->show();
-    }
+  for (int i = 0; i < numBlocks; i++) {
+    blocks[i]->show();
   }
 }
 
@@ -90,24 +108,35 @@ void loop(void) {
     draw();
   } while ( u8g.nextPage() );
 
-  // Check if block is intersecting with another block. 
-  if (isIntersecting()) {
-    createBlock();
-  } else if (block->hasReached()) {
-    createBlock();
-  } else {
-    block->update();
+  if (currentBlock != NULL) {
+    Serial.println("Not null");
+    if (shouldAssignNewBlock()) {
+      assignBlock();
+    } else {
+      currentBlock->updateBlock();
+    }
   }
 }
 
-boolean isIntersecting() {
-  for (uint8_t j = 0; j < 128; j++) {
-    if (blocks[j] != NULL) {
-     if ((block->y+7 == blocks[j]->y - 1) && (block->x == blocks[j]->x)) {
+boolean shouldAssignNewBlock() {
+  // Has the block touched another block?
+  for (int i = 0; i < numBlocks; i++) {
+     if ((currentBlock->y + 7 == blocks[i]->y - 1) && (currentBlock->x == blocks[i]->x)) {
         return true; 
      }
-    }
+  }
+
+  // Has the block reached the bottom?
+  if (currentBlock->hasReachedBottom()) {
+    return true;
   }
 
   return false;
 }
+
+void clearOLED(){
+    u8g.firstPage();  
+    do {
+    } while( u8g.nextPage() );
+}
+
