@@ -15,6 +15,7 @@ void setup() {
   Serial.begin(9600);
   // put your setup code here, to run once:
   u8g.begin();
+  u8g.setRot90();
 
   // Initialize radio.
   radio.begin();
