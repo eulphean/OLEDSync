@@ -58,7 +58,6 @@ void keyPressed() {
         c.move(0, 1);
      }
      
-     println("Position: " + c.xPos + ',' + c.yPos);
      String a = c.xPos + "," + c.yPos + "."; 
      myPort.write(a);
   }
