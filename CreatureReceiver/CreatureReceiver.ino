@@ -3,13 +3,14 @@
 
 RF24 radio(7,8);
 U8GLIB_SH1106_128X64 u8g(U8G_I2C_OPT_NONE);  
-const byte nodeAddress[5] = {'N','O','D','E','0'};
+const byte nodeAddress[5] = {'N','O','D','E','3'};
 const uint8_t numRows = 8; 
 const uint8_t numCols = 16; 
 const uint8_t cellWidth = 8; 
 
 // Global creature position.
 uint8_t creaturePos[2];
+boolean hide = true;
 
 void setup() {
   Serial.begin(9600);
@@ -31,16 +32,23 @@ void loop() {
     uint8_t payloadSize = radio.getDynamicPayloadSize(); 
     uint8_t payload[payloadSize];
     radio.read(payload, sizeof(payload));
-    creaturePos[0] = payload[0]; creaturePos[1] = payload[1];
+    if (payloadSize == 2) { // We received a position
+      creaturePos[0] = payload[0]; creaturePos[1] = payload[1];
+      hide = false;
+    } else {
+      hide = true; 
+    }
   }
 
   // Picture loop. 
   u8g.firstPage();
   do {
-    uint8_t a = creaturePos[0] * (cellWidth); 
-    uint8_t b = creaturePos[1] * (cellWidth); 
-    u8g.setHiColor(1);
-    u8g.drawBox(a, b, cellWidth, cellWidth);
+    if (!hide) {
+      uint8_t a = creaturePos[0] * (cellWidth); 
+      uint8_t b = creaturePos[1] * (cellWidth); 
+      u8g.setHiColor(1);
+      u8g.drawBox(a, b, cellWidth, cellWidth);
+    }
   } while ( u8g.nextPage() );
   
 }

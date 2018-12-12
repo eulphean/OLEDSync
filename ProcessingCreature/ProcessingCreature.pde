@@ -75,67 +75,84 @@ void keyPressed() {
         c.move(0, 1);
      }
      
-     int curScreen = getScreenNum(c.xPos, c.yPos);
+     println("Current screen is: " + c.curScreen);
      
-     // Send current position to the uController. 
-     String a = c.xPos + "," + c.yPos + "."; 
-     myPort.write(a);
+     int newPos[] = getPositionForScreens();
+     String toTransmit = c.curScreen + "," + newPos[0] + "," + newPos[1]; 
+     // Before screen change logic, send the screen number
+     if (c.curScreen != c.prevScreen) {
+       // Send the prev screen as well.
+       toTransmit += "," + c.prevScreen + "."; 
+  
+       // Next time we send a blank for the prev screen so we don't use it. 
+       c.prevScreen = c.curScreen; 
+     } else {
+       // Some arbitrary large number
+       toTransmit += "," + 100 + "."; // End the transmission string.  
+     }
      
-     // 
+     myPort.write(toTransmit);
   }
 }
 
-// Screen style
-//1 2
-//3 4
-//5 6
-//7 8
-//9 10
-// Return the board the creature is on for its xPos and yPos
-int getScreenNum(int xPos, int yPos) {
-  int currentScreen = -1;
-  if (xPos >= 0 && xPos <=7) {
-    // Screen 1
-     if (yPos >=0 && yPos <=15) currentScreen = 1; 
+int [] getPositionForScreens() {
+  int [] newPos = new int[2];
+  switch (c.curScreen) {
+     case 0: {
+       newPos[0] = c.xPos; newPos[1] = c.yPos; 
+       break;
+     }
      
-     // Screen 3
-     if (yPos >=16 && yPos <=31) currentScreen = 3; 
+    case 1: {
+     newPos[0] = c.xPos - 8; newPos[1] = c.yPos; 
+     break;
+   }
      
-     // Screen 5
-     if (yPos >=32 && yPos <=47) currentScreen = 5; 
-     
-     // Screen 7
-     if (yPos >=48 && yPos <= 63) currentScreen = 7; 
-     
-     // Screen 9
-     if (yPos >=64 && yPos <=79) currentScreen = 9; 
+    case 2: {
+     newPos[0] = c.xPos; newPos[1] = c.yPos - 16; 
+     break;
+   }
+   
+    case 3: {
+     newPos[0] = c.xPos - 8; newPos[1] = c.yPos - 16; 
+     break;
+   }
+   
+   case 4: {
+     newPos[0] = c.xPos; newPos[1] = c.yPos - 32; 
+     break;
+   }
+   
+   case 5: {
+     newPos[0] = c.xPos - 8; newPos[1] = c.yPos - 32; 
+     break;
+   }
+   
+   case 6: {
+     newPos[0] = c.xPos; newPos[1] = c.yPos - 48; 
+     break;
+   }
+   
+    case 7: {
+     newPos[0] = c.xPos - 8; newPos[1] = c.yPos - 48; 
+     break;
+   }
+    
+   case 8: {
+     newPos[0] = c.xPos; newPos[1] = c.yPos - 64; 
+     break;
+   }
+   
+   case 9: {
+     newPos[0] = c.xPos - 8; newPos[1] = c.yPos - 64; 
+     break;
+   }
+  
+   default: {
+     break;
+   }
   }
-  
-  if (xPos >= 8 && xPos <= 15) {
-    // Screen 1
-     if (yPos >=0 && yPos <=15) currentScreen = 2; 
-     
-     // Screen 3
-     if (yPos >=16 && yPos <=31) currentScreen = 4; 
-     
-     // Screen 5
-     if (yPos >=32 && yPos <=47) currentScreen = 6; 
-     
-     // Screen 7
-     if (yPos >=48 && yPos <= 63) currentScreen = 8; 
-     
-     // Screen 9
-     if (yPos >=64 && yPos <=79) currentScreen = 10; 
-  }
-  
-  
-  
-  if (currentScreen == -1) {
-    println("-------It should never come here. There is error--------");
-  } else {
-    println("Current Screen: " + currentScreen); 
-  }
-  return currentScreen; 
+  return newPos; 
 }
 
 void serialEvent(Serial p) {
