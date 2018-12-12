@@ -54,6 +54,10 @@ uint8_t blocksPerCol[numCols] = { 0 };
 
 void setup(void) {
   Serial.begin(9600);
+
+  // Set a random seed for generating a different set of random numbers. 
+  randomSeed(analogRead(0));
+  
   u8g.begin();
   
   radio.begin();
@@ -91,9 +95,12 @@ void assignBlock() {
     
   } else {
     delay(1000);
-    clearOLED(); 
     numBlocks = 0; 
-    blocksPerCol[numCols] = { 0 };
+    
+    // Reset this to 0.
+    for (int i = 0; i < numCols; i++) {
+      blocksPerCol[i] = 0; 
+    }
     
     // Assign block
     assignBlock();
@@ -113,7 +120,6 @@ void loop(void) {
   } while ( u8g.nextPage() );
 
   if (currentBlock != NULL) {
-    Serial.println("Not null");
     if (shouldAssignNewBlock()) {
       assignBlock();
     } else {
@@ -136,11 +142,5 @@ boolean shouldAssignNewBlock() {
   }
 
   return false;
-}
-
-void clearOLED(){
-    u8g.firstPage();  
-    do {
-    } while( u8g.nextPage() );
 }
 
