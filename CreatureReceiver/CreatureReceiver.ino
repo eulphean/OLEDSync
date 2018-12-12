@@ -3,7 +3,7 @@
 
 RF24 radio(7,8);
 U8GLIB_SH1106_128X64 u8g(U8G_I2C_OPT_NONE);  
-const byte nodeAddress[5] = {'N','O','D','E','0'};
+const byte nodeAddress[5] = {'N','O','D','E','9'};
 const uint8_t numRows = 8; 
 const uint8_t numCols = 16; 
 const uint8_t cellWidth = 8; 

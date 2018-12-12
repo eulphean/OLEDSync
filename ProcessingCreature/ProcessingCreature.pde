@@ -91,6 +91,7 @@ void keyPressed() {
        toTransmit += "," + 100 + "."; // End the transmission string.  
      }
      
+     println(toTransmit);
      myPort.write(toTransmit);
   }
 }
