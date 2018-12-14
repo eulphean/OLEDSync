@@ -30,7 +30,11 @@ void setup() {
 
 void draw() {
   background(255);
-    
+  
+  // Update environment
+  world.update();
+  
+  // Show the world
   world.show();
 }
 

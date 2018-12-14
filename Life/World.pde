@@ -14,9 +14,21 @@ class World {
         
         // Create a default number of food objects on the screen. 
         food = new ArrayList();  
-        for (int i = 0; i < 20; i++) {
-           food.add(new Food()); 
+        for (int i = 0; i < 50; i++) {
+           // Create the food on a grid cell
+           // TODO, if a food is already on a grid cell, create it somewhere else. 
+           int xFood = (int) random(0, numRows); int yFood = (int) random(0, numCols);
+           food.add(new Food(xFood, yFood)); 
         }
+    }
+    
+    void update() {
+      // Update food with creature's new position
+      for (int i = food.size()-1; i >= 0; i--) {
+         if (food.get(i).isColliding(c)) {
+            food.remove(i); // Remove the food from the array that has been collided
+         }
+      }
     }
 
     void show() {
