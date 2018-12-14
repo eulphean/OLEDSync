@@ -17,8 +17,7 @@ class World {
         for (int i = 0; i < 50; i++) {
            // Create the food on a grid cell
            // TODO, if a food is already on a grid cell, create it somewhere else. 
-           int xFood = (int) random(0, numRows); int yFood = (int) random(0, numCols);
-           food.add(new Food(xFood, yFood)); 
+           createNewFood();
         }
     }
     
@@ -27,6 +26,7 @@ class World {
       for (int i = food.size()-1; i >= 0; i--) {
          if (food.get(i).isColliding(c)) {
             food.remove(i); // Remove the food from the array that has been collided
+            //createNewFood();
          }
       }
     }
@@ -63,6 +63,11 @@ class World {
 
       // Show creature
       c.show();
+    }
+    
+    void createNewFood() {
+      int xFood = (int) random(0, numRows); int yFood = (int) random(0, numCols);
+      food.add(new Food(xFood, yFood)); 
     }
     
     void moveCreature(int x, int y) {
