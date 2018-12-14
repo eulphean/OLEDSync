@@ -2,7 +2,7 @@ class Creature {
   int xPos; int yPos; int curScreen; int prevScreen; 
   int creatureWidth = cellWidth * 2; 
   int creatureHeight = cellWidth * 3; 
-  int move = 8; 
+  int move = 4; 
   
   Creature() {
     xPos = 0; yPos = 0; curScreen = 0; prevScreen = 0;
@@ -42,7 +42,7 @@ class Creature {
          // Else, ignore this move. 
        }
     }
-    
+
     // Move is done, find what screen did this creature land on. 
     curScreen = getScreenNum(xPos, yPos);
   }
@@ -52,12 +52,10 @@ class Creature {
     int xBound = newXPos + creatureWidth;
     int yBound = newYPos + creatureHeight; 
     
-    println(xBound);
-    
     if (newXPos < 0) return true;  // Left wall
     if (newYPos < 0) return true;  // Upper wall 
-    if (xBound > boardWidth) return true;  // Right wall
-    if (yBound > boardHeight) return true; // Down wall.  
+    if (xBound > worldWidth) return true;  // Right wall
+    if (yBound > worldHeight) return true; // Down wall.  
     
     return false;
   }
