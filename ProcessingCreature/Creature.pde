@@ -1,5 +1,8 @@
 class Creature {
   int xPos; int yPos; int curScreen; int prevScreen; 
+  int creatureWidth = cellWidth * 2; 
+  int creatureHeight = cellWidth * 3; 
+  int move = 8; 
   
   Creature() {
     xPos = 0; yPos = 0; curScreen = 0; prevScreen = 0;
@@ -8,7 +11,7 @@ class Creature {
   void show() {
     fill(0);
     //ellipse(xPos * w, yPos * w, 16, 16);  
-    rect(xPos * cellWidth, yPos * cellWidth, cellWidth, cellWidth);
+    rect(xPos, yPos, creatureWidth, creatureHeight);
   }
   
   void move(int x, int y) {
@@ -16,32 +19,47 @@ class Creature {
     if (x != 0) {
        // Move left or right
        if (x > 0) {
-           newXPos = xPos + 1; 
+           newXPos = xPos + move; 
           // Detect collision
-          if (newXPos <= numCols -1) xPos++;
+          if (!isColliding(newXPos, yPos)) xPos += move;
           // Else, ignore this move. 
        } else {
           // Detect collision
-           newXPos = xPos - 1;
-          if (newXPos >= 0) xPos--;
+           newXPos = xPos - move;
+          if (!isColliding(newXPos, yPos)) xPos -= move;
           // Else, ignore this move. 
        }
     }
     
     if (y != 0) {
        if (y > 0) {
-         newYPos = yPos + 1; 
-         if (newYPos <= numRows -1) yPos++; 
+         newYPos = yPos + move; 
+         if (!isColliding(xPos, newYPos)) yPos += move; 
          // Else, ignore move
        } else {
-         newYPos = yPos - 1; 
-         if (newYPos >= 0) yPos--; 
+         newYPos = yPos - move; 
+         if (!isColliding(xPos, newYPos)) yPos -= move; 
          // Else, ignore this move. 
        }
     }
     
     // Move is done, find what screen did this creature land on. 
     curScreen = getScreenNum(xPos, yPos);
+  }
+  
+  boolean isColliding(int newXPos, int newYPos) {
+    // Calculate x boun for the creature
+    int xBound = newXPos + creatureWidth;
+    int yBound = newYPos + creatureHeight; 
+    
+    println(xBound);
+    
+    if (newXPos < 0) return true;  // Left wall
+    if (newYPos < 0) return true;  // Upper wall 
+    if (xBound > boardWidth) return true;  // Right wall
+    if (yBound > boardHeight) return true; // Down wall.  
+    
+    return false;
   }
   
   // Screen style
@@ -87,9 +105,9 @@ class Creature {
        if (yPos >=64 && yPos <=79) currentScreen = 9; 
     }
     
-    if (currentScreen == -1) {
-      println("-------It should never come here. There is error--------");
-    }
+    //if (currentScreen == -1) {
+    //  println("-------It should never come here. There is error--------");
+    //}
     
     return currentScreen; 
   }

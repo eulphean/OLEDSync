@@ -2,7 +2,7 @@
 #include <RF24.h>
 
 RF24 radio(7, 8);
-const byte nodeAddress[5] = {'N','O','D','E','4'};
+const byte nodeAddress[5] = {'N','O','D','E','%'};
 boolean resetScreen = false; 
 
 int globalSeed = 0; 

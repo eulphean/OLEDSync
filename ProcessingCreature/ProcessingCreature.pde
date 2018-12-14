@@ -20,36 +20,40 @@ int [][] board = new int[numCols][numRows];
 
 Creature c = new Creature(); 
 
+boolean showGrid = false;
+
 // Serial
 Serial myPort; 
 void setup() {
-  size(130, 650);
+  size(128, 640);
   
   // Print an array of all the cells. 
-  printArray(Serial.list());
+  //printArray(Serial.list());
   
   // Open the port you are using at the rate you want:
-  myPort = new Serial(this, Serial.list()[11], 9600);
+  //myPort = new Serial(this, Serial.list()[11], 9600);
 }
 
 void draw() {
   background(255);
   
-  // Red outline for the screens
-  for (int x = 0; x < numScreenCols; x++) {
-     for (int y = 0; y < numScreenRows; y++) {
-        int a = 255 / (x+y+1);
-        color c = color(a, a*2, a*3); // Red outline
-        fill(c);
-        rect(x*screenWidth, y*screenHeight, screenWidth, screenHeight);
-     }
-  }
-  
-  // Draw the board. 
-  for (int y = 0; y < numRows; y++) {
-    for (int x = 0; x < numCols; x++) {
-        noFill();
-        rect(x*cellWidth, y*cellWidth, cellWidth, cellWidth);
+  if (showGrid) {
+    // Red outline for the screens
+    for (int x = 0; x < numScreenCols; x++) {
+       for (int y = 0; y < numScreenRows; y++) {
+          int a = 255 / (x+y+1);
+          color c = color(a, a*2, a*3); // Red outline
+          fill(c);
+          rect(x*screenWidth, y*screenHeight, screenWidth, screenHeight);
+       }
+    }
+    
+    // Draw the board. 
+    for (int y = 0; y < numRows; y++) {
+      for (int x = 0; x < numCols; x++) {
+          noFill();
+          rect(x*cellWidth, y*cellWidth, cellWidth, cellWidth);
+      }
     }
   }
 
@@ -58,6 +62,10 @@ void draw() {
 }
 
 void keyPressed() {
+  if (key == ' ') {
+     showGrid = !showGrid;  
+  }
+  
   if (key == CODED) {
      if (keyCode == RIGHT) {
         c.move(1, 0);
@@ -74,9 +82,7 @@ void keyPressed() {
      if (keyCode == DOWN) {
         c.move(0, 1);
      }
-     
-     println("Current screen is: " + c.curScreen);
-     
+    
      int newPos[] = getPositionForScreens();
      String toTransmit = c.curScreen + "," + newPos[0] + "," + newPos[1]; 
      // Before screen change logic, send the screen number
@@ -91,8 +97,8 @@ void keyPressed() {
        toTransmit += "," + 100 + "."; // End the transmission string.  
      }
      
-     println(toTransmit);
-     myPort.write(toTransmit);
+     //println(toTransmit);
+     //myPort.write(toTransmit);
   }
 }
 

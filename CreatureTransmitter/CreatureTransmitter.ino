@@ -38,6 +38,7 @@ void setup() {
   radio.begin();
   radio.enableDynamicPayloads();
   radio.setPALevel(RF24_PA_MIN);
+  radio.setRetries(1, 5);
   radio.stopListening();
 }
 
